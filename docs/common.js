@@ -91,6 +91,9 @@ async function createPeer(role) {
     pc = new RTCPeerConnection({
         iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
     });
+    // Expose peer connection globally for debugging
+window._pc = pc;
+
 
     pc.onicecandidate = (event) => {
         if (event.candidate) {
