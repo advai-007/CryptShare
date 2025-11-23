@@ -3,7 +3,11 @@ const http = require("http");
 
 const PORT = process.env.PORT || 3000;
 
-const server = http.createServer();
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("CryptShare signaling server is running");
+});
+
 const wss = new WebSocket.Server({ server });
 
 console.log("Starting Signaling Server...");
@@ -51,13 +55,11 @@ wss.on("connection", (ws) => {
         for (const [roomId, room] of Object.entries(rooms)) {
             if (room.a === ws) {
                 room.a = null;
-                console.log(`Peer A left ${roomId}`);
                 if (room.b?.readyState === WebSocket.OPEN)
                     room.b.send(JSON.stringify({ type: "peer-left", role: "a" }));
             }
             if (room.b === ws) {
                 room.b = null;
-                console.log(`Peer B left ${roomId}`);
                 if (room.a?.readyState === WebSocket.OPEN)
                     room.a.send(JSON.stringify({ type: "peer-left", role: "b" }));
             }
