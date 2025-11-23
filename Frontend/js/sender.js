@@ -1,4 +1,4 @@
-import { socket, setRoomId ,channel } from "./common.js";
+import { socket, setRoomId, channel } from "./common.js";
 
 // Define role once
 sessionStorage.setItem("role", "sender");
@@ -10,9 +10,18 @@ function generateRoomId() {
 }
 
 document.getElementById("copyCodeBtn").onclick = () => {
-    navigator.clipboard.writeText(room);
-}
-
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(room);
+    } else {
+        // Fallback for HTTP or Android 
+        const temp = document.createElement("textarea");
+        temp.value = room;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        temp.remove();
+    }
+};
 
 function joinRoom(room) {
     setRoomId(room);
@@ -179,7 +188,7 @@ function sendFile(file) {
 
         // speed
         const elapsedSec = (Date.now() - startTime) / 1000;
-        const speedMB = (bytesSent / (1024 * 1024)) / elapsedSec; 
+        const speedMB = (bytesSent / (1024 * 1024)) / elapsedSec;
         speedText.textContent = speedMB.toFixed(2) + " MB/s";
 
         if (offset < file.size) {
@@ -199,9 +208,10 @@ function sendFile(file) {
         reader.readAsArrayBuffer(chunk);
     }
 
-    readNextChunk();
+    channel.onmessage = (event) => {
+        const msg = JSON.parse(event.data);
+        if (msg.type === "file-accept") {
+            readNextChunk();
+        }
+    };
 }
-
-
-
-

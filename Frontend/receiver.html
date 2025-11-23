@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
   <head>
+    
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CryptShare – Enter Room Code</title>
 
     <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="./js/tailwindcss.js"></script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -148,6 +149,11 @@
             <p class="text-center text-sm font-medium text-white/80">
               Waiting for files...
             </p>
+
+            <!-- Accept Button (Hidden by default) -->
+            <button id="acceptFileBtn" class="hidden mt-4 w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 px-4 rounded-xl transition">
+                Download File
+            </button>
 
             <!-- Progress Bar -->
             <div

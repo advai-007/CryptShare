@@ -1,4 +1,4 @@
-export const socket = new WebSocket("ws://localhost:3000");
+export const socket = new WebSocket("ws://192.168.1.8:3000");
 
 let pc;
 export let channel;
