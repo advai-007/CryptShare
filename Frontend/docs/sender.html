@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CryptShare – Combined</title>
+
+    <!-- Tailwind -->
+    <script src="./tailwindcss.js"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icons/icon-192.png">
+<meta name="theme-color" content="#137fec">
+
+
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      }
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+      }
+    </style>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#137fec",
+              "background-dark": "#101922",
+            },
+            fontFamily: { display: ["Space Grotesk", "sans-serif"] },
+          },
+        },
+      };
+    </script>
+  </head>
+
+  <body class="bg-background-dark text-white font-display overflow-hidden">
+    <!-- Top Navigation (common for both) -->
+    <header
+      class="absolute top-0 left-0 right-0 px-6 py-4 flex items-center gap-3"
+    >
+      <span class="material-symbols-outlined text-primary text-3xl"
+        ><img src="./icons/logo.png" alt="CryptShare Logo" class="w-12 h-12"></span
+      >
+      <h2 class="text-xl font-bold">CryptShare</h2>
+    </header>
+
+    <!-- ============================ -->
+    <!-- PAGE 1 — ROOM CODE PAGE      -->
+    <!-- ============================ -->
+    <div
+      id="page-room"
+      class="min-h-screen flex flex-col items-center justify-center px-4 relative"
+    >
+      <main class="w-full max-w-md mt-20">
+        <div
+          class="p-8 rounded-xl bg-white/5 border border-white/10 shadow-2xl backdrop-blur-xl flex flex-col items-center"
+        >
+          <h1 class="text-3xl font-bold text-center">Your Room Code</h1>
+
+          <div
+            class="flex items-center justify-center gap-4 mt-6 bg-black/20 rounded-lg px-4 py-3"
+          >
+            <h2
+              id="roomCode"
+              class="text-primary text-4xl tracking-widest font-bold"
+            >
+              A4B-9E1
+            </h2>
+            <button id="copyCodeBtn" class="text-white/60 hover:text-white">
+              <span class="material-symbols-outlined text-3xl"
+                >content_copy</span
+              >
+            </button>
+          </div>
+
+          <button
+            class="mt-4 flex items-center gap-2 bg-primary/20 hover:bg-primary/30 text-primary rounded-full px-4 py-2 transition"
+          >
+            <span class="material-symbols-outlined">qr_code_2</span>
+            Show QR Code
+          </button>
+
+          <p class="mt-6 text-white/70 text-center text-sm">
+            Share this code with the recipient to connect.
+          </p>
+
+          <div id="connectingIndicator" class="mt-8 w-full text-center">
+            <p class="text-sm text-white/50">Waiting for receiver...</p>
+            <div
+              class="relative mt-2 h-2 w-full rounded-full bg-black/30 overflow-hidden"
+            >
+              <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+            </div>
+          </div>
+
+          <div id="connectedIndicator" class="mt-8 w-full text-center hidden">
+            <p class="text-sm font-medium text-[#39FF14]">
+              Connected to recipient.
+            </p>
+            <div class="relative mt-2 h-2 w-full rounded-full bg-[#39FF14]/20">
+              <div class="h-full w-full bg-[#39FF14] rounded-xl"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ============================ -->
+    <!-- PAGE 2 — FILE TRANSFER PAGE  -->
+    <!-- ============================ -->
+    <div
+      id="page-transfer"
+      class="hidden min-h-screen flex flex-col items-center p-6"
+    >
+      <div id="connectedIndicator" class="mt-8 w-full text-center">
+        <p class="text-sm font-medium text-[#39FF14]">
+          Connected to recipient.
+        </p>
+        <div class="relative mt-2 h-2 w-full rounded-full bg-[#39FF14]/20">
+          <div class="h-full w-full bg-[#39FF14] rounded-xl"></div>
+        </div>
+      </div>
+
+      <h1 class="text-white text-4xl font-bold tracking-tight pt-14 pb-8">
+        Transfer Files
+      </h1>
+
+      <div
+        class="w-full max-w-[560px] glass-effect rounded-2xl p-6 border border-white/10"
+      >
+        <!-- STATE 1: EMPTY DROP ZONE -->
+        <div id="state-empty" class="flex flex-col gap-6">
+          <div
+            id="drop-zone"
+            class="flex flex-col items-center gap-6 rounded-xl border-2 border-dashed border-gray-700 hover:border-primary transition px-6 py-14"
+          >
+            <span class="material-symbols-outlined text-gray-500 text-5xl"
+              >upload</span
+            >
+            <p class="text-white text-lg font-bold">Drag & drop files here</p>
+            <p class="text-gray-400 text-sm">or</p>
+            <button
+              id="choose-file-btn"
+              class="rounded-xl h-10 px-4 bg-gray-800 hover:bg-gray-700 text-white text-sm font-bold"
+            >
+              Choose File
+            </button>
+            <input type="file" id="file-input" class="hidden" multiple />
+          </div>
+        </div>
+
+        <!-- STATE 2: FILES SELECTED -->
+        <div id="state-selected" class="hidden flex flex-col gap-4">
+          <div id="file-list" class="flex flex-col gap-3"></div>
+
+          <button
+            id="add-more-files"
+            class="rounded-xl h-10 px-4 bg-gray-800 hover:bg-gray-700 text-white text-sm font-bold"
+          >
+            Add More Files
+          </button>
+
+          <button
+            id="send-files-btn"
+            class="w-full h-12 mt-3 rounded-xl bg-primary hover:bg-blue-600 text-white font-bold"
+          >
+            Send Files
+          </button>
+        </div>
+
+        <!-- STATE 3: PROGRESS -->
+        <div
+          id="state-progress"
+          class="hidden flex flex-col gap-4 items-center mt-4"
+        >
+          <p class="text-gray-300">Sending file...</p>
+
+          <div class="w-full bg-gray-800 rounded-full h-2.5">
+            <div
+              id="progress-bar"
+              class="bg-primary h-2.5 rounded-full"
+              style="width: 0%"
+            ></div>
+          </div>
+
+          <p id="progress-text" class="text-white text-lg font-bold">
+            0% complete
+          </p>
+          <p id="speed-text" class="text-gray-300 text-sm mt-1">0 MB/s</p>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./service-worker.js')
+            .then((registration) => {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, (err) => {
+              console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+      }
+    </script>
+    <script type="module" src="./sender.js"></script>
+</html>
