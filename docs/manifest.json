@@ -1,15 +1,11 @@
 {
   "name": "CryptShare",
   "short_name": "CryptShare",
-  "description": "Fast peer-to-peer file sharing app using WebRTC",
-  "start_url": "/index.html",
-  "scope": "/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "orientation": "portrait-primary",
-
   "background_color": "#101922",
   "theme_color": "#137fec",
-
   "icons": [
     {
       "src": "./icons/icon-192.png",
