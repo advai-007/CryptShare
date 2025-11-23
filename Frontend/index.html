@@ -45,7 +45,7 @@
 </head>
 
 <body class="bg-background-dark text-white font-display">
-   <button id="installBtn" class="hidden bg-primary px-4 py-2 rounded-lg">
+   <button id="installBtn" class="hidden fixed top-4 right-4 z-50 bg-primary px-4 py-2 rounded-lg shadow-lg hover:bg-primary/90 transition">
     Install App
 </button>
 
@@ -131,13 +131,25 @@ window.addEventListener("beforeinstallprompt", (e) => {
 });
 
 document.getElementById("installBtn").onclick = async () => {
+    if (!deferredPrompt) {
+        return;
+    }
     deferredPrompt.prompt();
     await deferredPrompt.userChoice;
     deferredPrompt = null;
     document.getElementById("installBtn").classList.add("hidden");
 };
-</script>
 
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+            .then((registration) => {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, (err) => {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+    });
+}
 </script>
 
 </body>
