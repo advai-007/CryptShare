@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CryptShare – Enter Room Code</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icons/icon-192.png">
+<meta name="theme-color" content="#137fec">
+
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#137fec",
+              "background-dark": "#101922",
+            },
+            fontFamily: { display: ["Space Grotesk", "sans-serif"] },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      }
+    </style>
+  </head>
+
+  <body class="bg-background-dark text-white font-display overflow-hidden">
+    <!-- Page Container -->
+    <div
+      class="min-h-screen flex flex-col items-center justify-center px-4 relative"
+    >
+      <!-- Top Navigation -->
+      <header
+        class="absolute top-0 left-0 right-0 px-6 py-4 flex items-center gap-3"
+      >
+        <span class="material-symbols-outlined text-primary text-3xl"
+          ><img src="./icons/logo.png" alt="CryptShare Logo" class="w-12 h-12"></span
+        >
+        <h2 class="text-xl font-bold">CryptShare</h2>
+      </header>
+
+      <!-- Main Card -->
+      <main class="w-full max-w-md mt-20">
+        <div id="before-connecting"
+          class="p-8 rounded-xl bg-white/5 border border-white/10 shadow-2xl backdrop-blur-xl flex flex-col items-center"
+        >
+          <!-- Title -->
+          <h1 class="text-3xl font-bold text-center">Enter Room Code</h1>
+
+          <!-- Input -->
+          <input
+            id="roomInput"
+            type="text"
+            placeholder="e.g. A4B9E1"
+            class="mt-6 w-full px-4 py-3 rounded-lg bg-black/20 border border-white/10 focus:outline-none focus:border-primary text-center text-lg tracking-widest placeholder-gray-500"
+          />
+
+          <!-- Connect Button -->
+          <button
+            id="connectBtn"
+            class="mt-6 w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-primary font-bold hover:bg-primary/90 transition"
+          >
+            <span class="material-symbols-outlined">link</span>
+            Connect
+          </button>
+
+          <!-- Info Text -->
+          <p class="mt-6 text-white/60 text-sm text-center">
+            Ask the sender for their room code.
+          </p>
+
+          <!-- Connecting Indicator -->
+          <div id="connectingIndicator" class="mt-8 w-full hidden">
+            <p class="text-center text-sm text-white/50">Connecting...</p>
+            <div
+              class="relative mt-2 h-2 w-full rounded-full bg-black/30 overflow-hidden"
+            >
+              <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+            </div>
+          </div>
+
+          <!-- Connected Indicator -->
+          <div id="connectedIndicator" class="mt-8 w-full hidden">
+            <p class="text-center text-sm font-medium text-[#39FF14]">
+              Connected!
+            </p>
+            <div class="relative mt-2 h-2 w-full rounded-full bg-[#39FF14]/20">
+              <div class="h-full w-full bg-[#39FF14] rounded-xl"></div>
+            </div>
+          </div>
+
+          <!-- Waiting for File Section -->
+          
+        </div>
+
+
+        <div id="after-connecting"
+          class=" hidden p-8 rounded-xl bg-white/5 border border-white/10 shadow-2xl backdrop-blur-xl flex flex-col items-center"
+        >
+          <!-- Title -->
+          <h1 class="text-3xl font-bold text-center">Room Code</h1>
+
+          <!-- Input -->
+          <input
+            id="roomDisplay"
+            type="text"
+            placeholder="e.g. A4B9E1"
+            class="mt-6 w-full px-4 py-3 rounded-lg bg-black/20 border border-white/10 focus:outline-none focus:border-primary text-center text-lg tracking-widest placeholder-gray-500"
+            readonly
+            />
+ 
+
+          <!-- Connected Indicator -->
+          <div id="connectedIndicator" class="mt-8 w-full ">
+            <p class="text-center text-sm font-medium text-[#39FF14]">
+              Connected!
+            </p>
+            <div class="relative mt-2 h-2 w-full rounded-full bg-[#39FF14]/20">
+              <div class="h-full w-full bg-[#39FF14] rounded-xl"></div>
+            </div>
+          </div>
+
+          <!-- Waiting for File Section -->
+           <div id="waitingForFiles" class="mt-8 w-full ">
+            <p class="text-center text-sm font-medium text-white/80">
+              Waiting for files...
+            </p>
+
+            <!-- Progress Bar -->
+            <div
+              class="relative mt-4 h-2 w-full rounded-full bg-black/30 overflow-hidden"
+            >
+              <div
+                id="receiveProgressBar"
+                class="h-full w-0 bg-primary transition-all duration-200"
+              ></div>
+            </div>
+
+            <p
+              id="receiveProgressText"
+              class="text-center mt-2 text-white/60 text-sm"
+            >
+              0% received
+            </p>
+          </div>
+          
+        </div>
+      </main>
+    </div>
+  </body>
+  <script type="module" src="./js/receiver.js"></script>
+</html>
+
+
+
+
+
