@@ -4,6 +4,7 @@ sessionStorage.setItem("role", "receiver");
 
 // JOIN ROOM
 document.getElementById("connectBtn").onclick = () => {
+    document.getElementById("connectingIndicator").classList.remove("hidden");
     const room = document.getElementById("roomInput").value;
     document.getElementById("roomDisplay").value = room;
     joinRoom(room);
@@ -66,7 +67,13 @@ async function setupReceiver() {
                 if (!window.showSaveFilePicker) {
                     useFallback = true;
                     console.warn("FileSystem API not supported. Using RAM fallback.");
-                    alert("⚠️ Warning: Your connection is not secure (HTTP). Using RAM compatibility mode.\n\nFiles larger than ~500MB may crash the browser.");
+
+                    if (!window.isSecureContext) {
+                        alert("⚠️ Warning: Your connection is not secure (HTTP). Using RAM compatibility mode.\n\nFiles larger than ~500MB may crash the browser.");
+                    } else {
+                        // Secure context but API not supported (e.g., Firefox, Safari, Android Chrome)
+                        console.log("Browser does not support FileSystem API. Using RAM fallback.");
+                    }
                 } else {
                     useFallback = false;
                 }
