@@ -172,58 +172,11 @@ export function updateConnectionUI() {
 // --------------------------------------------------------
 // HYBRID MODE: DETECT LAN (supports IP and mDNS .local)
 // --------------------------------------------------------
-async function isSameLAN() {
-    return new Promise(resolve => {
-        let rtc = new RTCPeerConnection({ iceServers: [] });
-        rtc.createDataChannel("x");
-
-        let lan = false;
-
-        rtc.onicecandidate = (event) => {
-            if (!event.candidate) {
-                rtc.close();
-                resolve(lan);
-                return;
-            }
-
-            const cand = event.candidate.candidate;
-
-            // Detect mDNS hostname (.local) → means private LAN
-            if (cand.includes(".local")) {
-                lan = true;
-                return;
-            }
-
-            // Detect IPv4 LAN
-            let match = cand.match(/(\d+\.\d+\.\d+\.\d+)/);
-            if (!match) return;
-
-            let ip = match[1];
-            if (
-                ip.startsWith("192.168.") ||
-                ip.startsWith("10.") ||
-                (ip >= "172.16." && ip <= "172.31.")
-            ) {
-                lan = true;
-            }
-        };
-
-        rtc.createOffer().then(o => rtc.setLocalDescription(o));
-    });
-}
-
 // --------------------------------------------------------
-// GET HYBRID ICE CONFIG
+// GET ICE CONFIG
 // --------------------------------------------------------
 async function getHybridConfig() {
-    const lan = await isSameLAN();
-
-    if (lan) {
-        console.log("🔵 FAST LAN MODE (no STUN)");
-        return { iceServers: [], iceCandidatePoolSize: 0 };
-    }
-
-    console.log("🌐 INTERNET STUN MODE");
+    console.log("🌐 Using STUN Config");
     return {
         iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
         iceCandidatePoolSize: 0
@@ -277,14 +230,11 @@ socket.onmessage = async (event) => {
 };
 
 // --------------------------------------------------------
-// CREATE PEER (Hybrid config)
+// CREATE PEER
 // --------------------------------------------------------
 async function createPeer(role) {
     const iceConfig = await getHybridConfig();
     pc = new RTCPeerConnection(iceConfig);
-
-    // debug
-    window._pc = pc;
 
     pc.onicecandidate = (event) => {
         if (event.candidate) {
@@ -327,7 +277,3 @@ function createDataChannel() {
         }
     };
 }
-
-
-
-
